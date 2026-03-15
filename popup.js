@@ -552,6 +552,11 @@
                 setTimeout(() => {
                     settingsStatus.style.display = 'none';
                 }, 3000);
+                
+                // Keep UI synced immediately 
+                if (aiPanel && resultsSection.style.display === 'flex') {
+                    aiPanel.style.display = currentApiKey ? 'block' : 'none';
+                }
             } catch (e) {
                 console.error("Failed to save API key", e);
             }
@@ -686,7 +691,7 @@
             return;
         }
 
-        const model = 'meta/llama3-70b-instruct';
+        const model = 'meta/llama-3.1-70b-instruct';
         const mode = aiMode ? aiMode.value : 'similar';
         const count = Math.min(Math.max(parseInt(aiCount?.value || '5', 10) || 5, 1), 10);
         const includeAnswers = aiIncludeAnswers ? aiIncludeAnswers.checked : true;
