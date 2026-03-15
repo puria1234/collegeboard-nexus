@@ -8,27 +8,32 @@
 </head>
 <body>
   <div class="container">
-    <!-- Header with Branding -->
-    <header class="header">
-      <div class="brand">
-        <svg class="brand-icon" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="32" y="20" width="64" height="88" rx="8" fill="currentColor"/>
-          <rect x="44" y="44" width="40" height="4" rx="2" fill="#0a0a0a"/>
-          <rect x="44" y="56" width="40" height="4" rx="2" fill="#0a0a0a"/>
-          <rect x="44" y="68" width="28" height="4" rx="2" fill="#0a0a0a"/>
-          <circle cx="50" cy="88" r="3" fill="#0a0a0a"/>
-          <circle cx="64" cy="88" r="3" fill="#0a0a0a"/>
-          <circle cx="78" cy="88" r="3" fill="#0a0a0a"/>
-        </svg>
-        <div class="brand-text">
-          <h1 class="brand-title">CollegeBoard Nexus</h1>
-          <p class="brand-subtitle">Question Extractor</p>
+    <div id="mainView">
+      <!-- Header with Branding -->
+      <header class="header">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div class="brand">
+            <svg class="brand-icon" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="32" y="20" width="64" height="88" rx="8" fill="currentColor"/>
+              <rect x="44" y="44" width="40" height="4" rx="2" fill="#0a0a0a"/>
+              <rect x="44" y="56" width="40" height="4" rx="2" fill="#0a0a0a"/>
+              <rect x="44" y="68" width="28" height="4" rx="2" fill="#0a0a0a"/>
+              <circle cx="50" cy="88" r="3" fill="#0a0a0a"/>
+              <circle cx="64" cy="88" r="3" fill="#0a0a0a"/>
+              <circle cx="78" cy="88" r="3" fill="#0a0a0a"/>
+            </svg>
+            <div class="brand-text">
+              <h1 class="brand-title">CollegeBoard Nexus</h1>
+              <p class="brand-subtitle">Question Extractor</p>
+            </div>
+          </div>
+          <button id="settingsBtn" title="Settings" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; transition: color 0.2s;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
         </div>
-      </div>
-      <div class="status">
-        <div class="status-dot" id="statusDot"></div>
-        <span class="status-text" id="statusText">Initializing...</span>
-      </div>
       <div class="course-select">
         <div class="course-row">
           <label class="course-label" for="courseSelect">Course</label>
@@ -46,19 +51,19 @@
         <div class="course-hint" style="display: none;"></div>
       </div>
       <div class="tool-card" id="hiderCard" style="display: none;">
-        <div class="tool-row">
-          <div class="tool-info">
-            <span class="tool-title">Answer Hider</span>
-            <span class="tool-subtitle">Hide correct/incorrect indicators</span>
+        <div class="tool-row" style="margin-bottom: 0; gap: 16px;">
+          <div class="tool-info" style="flex: 1; min-width: 0;">
+            <span class="tool-title">Answer Hider Panel</span>
+            <span class="tool-subtitle">Show/hide the on-page toggle</span>
+            <span class="tool-note" id="hiderNote" style="display: block; margin-top: 6px;">Use panel to hide answers</span>
           </div>
-          <label class="toggle">
-            <input type="checkbox" id="hiderToggle">
-            <span class="toggle-track"></span>
-          </label>
-        </div>
-        <div class="tool-meta">
-          <span class="tool-badge" id="hiderBadge">Hidden</span>
-          <span class="tool-note" id="hiderNote">Syncs across frames</span>
+          <div style="display: flex; align-items: center; gap: 16px; flex-shrink: 0;">
+            <label class="toggle">
+              <input type="checkbox" id="hiderToggle">
+              <span class="toggle-track"></span>
+            </label>
+            <span class="tool-badge" id="hiderBadge" style="width: 60px; text-align: center; flex-shrink: 0;">Visible</span>
+          </div>
         </div>
       </div>
       <button class="btn btn-primary header-extract-btn" id="extractBtn" disabled style="display: none;">
@@ -87,6 +92,37 @@
             Download
           </button>
         </div>
+      </div>
+      <div class="ai-panel" id="aiPanel">
+        <div class="ai-header">
+          <div class="ai-title-wrap">
+            <span class="ai-title">AI Study Tools</span>
+            <span class="ai-subtitle">Generate practice and summaries</span>
+          </div>
+        </div>
+        <div class="ai-grid">
+          <label class="ai-label" for="aiMode">Mode</label>
+          <div class="ai-row">
+            <select class="ai-select" id="aiMode">
+              <option value="similar">Similar Questions</option>
+              <option value="summary">Key Concepts & Tips</option>
+              <option value="flashcards">Flashcards</option>
+            </select>
+            <div class="ai-row-group" id="aiCountWrap">
+              <label class="ai-inline-label" for="aiCount">Count</label>
+              <input class="ai-input ai-input--count" id="aiCount" type="number" min="1" max="10" value="5" />
+            </div>
+          </div>
+
+          <label class="ai-check" id="aiAnswersWrap">
+            <input type="checkbox" id="aiIncludeAnswers" checked />
+            <span>Include answer key</span>
+          </label>
+        </div>
+
+        <button class="btn btn-primary" id="aiGenerateBtn">Generate with AI</button>
+        <div class="ai-status" id="aiStatus" style="display: none;"></div>
+        <div class="ai-output" id="aiOutput" style="display: none;"></div>
       </div>
       <div class="preview" id="previewBox"></div>
     </div>
@@ -119,6 +155,31 @@
       </p>
     </div>
 
+    </div> <!-- End mainView -->
+
+    <!-- Settings View -->
+    <div id="settingsView" style="display: none; padding: 24px; flex-direction: column; gap: 16px; flex: 1;">
+      <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px;">
+        <button id="backBtn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; padding: 4px; transition: color 0.2s;" title="Back">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <span style="font-size: 15px; font-weight: 600; color: var(--text-title);">Settings</span>
+      </div>
+      
+      <div class="card" style="margin: 0;">
+        <label class="course-label" style="display: block; margin-bottom: 8px;">NVIDIA API Key</label>
+        <input type="password" id="apiKeyInput" style="width: 100%; background: var(--bg-input); border: 1px solid var(--border-strong); color: var(--text-title); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; outline: none; margin-bottom: 8px;" placeholder="nvapi-..." />
+        <span class="tool-note" style="display: block; margin-bottom: 16px;">
+          Get your free API key from <a href="https://build.nvidia.com/explore/discover" target="_blank" style="color: #60a5fa; text-decoration: none;">build.nvidia.com</a> to enable AI features.
+        </span>
+        <button class="btn btn-primary" id="saveSettingsBtn">Save Key</button>
+        <div id="settingsStatus" style="margin-top: 12px; font-size: 12px; color: #34d399; display: none;">Saved successfully!</div>
+      </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
       <div class="footer-content">
@@ -128,6 +189,7 @@
     </footer>
   </div>
 
+  <script src="config.local.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

@@ -12,6 +12,9 @@
 (() => {
   'use strict';
 
+  if (window.__cbContentInjected_v2) return;
+  window.__cbContentInjected_v2 = true;
+
   // ─── Settings blocklist ──────────────────────────────────────────────
 
   const SETTINGS_KEYWORDS = [

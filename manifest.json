@@ -5,7 +5,11 @@
   "description": "Extract and export questions from AP Classroom, and hide answers while studying",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://integrate.api.nvidia.com/*"
   ],
   "action": {
     "default_popup": "popup.html",

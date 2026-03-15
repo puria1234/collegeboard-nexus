@@ -8,6 +8,9 @@
 (() => {
   'use strict';
 
+  if (window.__cbhInjected_v2) return;
+  window.__cbhInjected_v2 = true;
+
   const MESSAGE_SOURCE = 'cb-nexus-hider';
 
   // ── CSS that hides answer indicators ─────────────────────────────────────
@@ -24,91 +27,54 @@
   color: inherit !important;
   background-color: inherit !important;
 }
-.LearnosityDistractor {
-  display: none !important;
-}
 `;
 
   // ── CSS for the floating panel UI ────────────────────────────────────────
   const PANEL_CSS = `
 .cbh-panel {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 2147483647;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  background: linear-gradient(135deg, rgba(20, 20, 20, 0.98) 0%, rgba(10, 10, 10, 0.98) 100%);
-  color: #f5f5f5;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  position: fixed; bottom: 20px; right: 20px; z-index: 2147483647;
+  pointer-events: auto; display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px; background-color: #050505; color: #ededed;
+  border-radius: 12px; border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 12.5px;
-  user-select: none;
-  transition: all .25s ease;
+  font-size: 13px; user-select: none; transition: all .25s ease;
 }
 .cbh-panel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  background: linear-gradient(120deg, rgba(255, 255, 255, 0.06), transparent 40%);
+  content: ""; position: absolute; inset: 0; border-radius: 12px;
+  background: radial-gradient(100% 100% at 50% 0%, rgba(255,255,255,0.06) 0%, transparent 100%);
   pointer-events: none;
 }
-.cbh-panel--collapsed { padding: 8px 12px; gap: 0; }
-.cbh-panel--collapsed .cbh-title,
-.cbh-panel--collapsed .cbh-switch,
-.cbh-panel--collapsed .cbh-status { display: none; }
-.cbh-title { font-weight: 600; white-space: nowrap; letter-spacing: 0.2px; }
-.cbh-switch {
-  position: relative; display: inline-block;
-  width: 42px; height: 22px; flex-shrink: 0; cursor: pointer;
-}
-.cbh-switch input { opacity: 0; width: 0; height: 0; }
+.cbh-panel--collapsed { padding: 8px; gap: 0; }
+.cbh-panel--collapsed .cbh-title, .cbh-panel--collapsed .cbh-switch,
+.cbh-panel--collapsed .cbh-status { display: none !important; }
+.cbh-title { font-weight: 500; white-space: nowrap; }
+.cbh-switch { position: relative; display: inline-block; flex-shrink: 0; width: 36px; height: 20px; cursor: pointer; }
+.cbh-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
 .cbh-slider {
-  position: absolute; inset: 0;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  transition: background .2s, border .2s, box-shadow .2s;
+  position: absolute; inset: 0; background: #121212;
+  border-radius: 20px; border: 1px solid rgba(255,255,255,0.16); transition: 0.3s;
+  box-sizing: border-box;
 }
-.cbh-slider::after {
-  content: ""; position: absolute; left: 3px; top: 3px;
-  width: 16px; height: 16px; background: #0a0a0a;
-  border-radius: 50%; transition: transform .2s, background .2s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+.cbh-slider::before {
+  content: ""; position: absolute; left: 2px; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 14px; background: #71717a; border-radius: 50%; transition: 0.3s;
 }
-.cbh-switch input:checked + .cbh-slider {
-  background: linear-gradient(135deg, #ffffff 0%, #d5d5d5 100%);
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
-}
-.cbh-switch input:checked + .cbh-slider::after {
-  transform: translateX(18px);
-  background: #0b0b0b;
-}
+.cbh-switch input:checked + .cbh-slider { background: #ffffff; border-color: #ffffff; }
+.cbh-switch input:checked + .cbh-slider::before { transform: translate(16px, -50%); background: #000; }
 .cbh-status {
-  padding: 2px 8px; border-radius: 6px; font-size: 11px;
-  font-weight: 600; background: linear-gradient(135deg, #ffffff 0%, #d5d5d5 100%);
-  color: #0a0a0a; white-space: nowrap; transition: all .2s;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase;
+  background: #ffffff; color: #000; transition: all .2s; border: 1px solid #fff;
 }
-.cbh-status--showing {
-  background: rgba(255, 255, 255, 0.12);
-  color: #e5e5e5;
-  border-color: rgba(255, 255, 255, 0.2);
-}
+.cbh-status--showing { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border-color: rgba(239, 68, 68, 0.2); }
 .cbh-collapse-btn {
   display: flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; border: none; border-radius: 6px;
-  background: rgba(255,255,255,.08); color: #cbd5f5;
-  font-size: 16px; line-height: 1; cursor: pointer;
-  transition: background .15s, color .15s; flex-shrink: 0;
+  width: 22px; height: 22px; border: none; border-radius: 4px;
+  background: transparent; color: #a1a1aa; font-size: 14px; cursor: pointer;
+  transition: all .2s; position: relative; z-index: 2;
 }
-.cbh-collapse-btn:hover { background: rgba(255,255,255,.16); color: #ffffff; }
+.cbh-panel--collapsed .cbh-collapse-btn { width: 22px; height: 22px; }
+.cbh-collapse-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
 `;
 
   // ── State ────────────────────────────────────────────────────────────────
@@ -117,6 +83,8 @@
   let hiding = true;
   let panelBuilt = false;
   let panelRefs = null;
+  let panelEl = null;
+  let panelVisible = true;
 
   const isTopFrame = () => window.top === window.self;
 
@@ -133,6 +101,10 @@
   function injectHideStyles() {
     if (hideStyleEl) return;
     const head = document.head || document.documentElement;
+    // Remove old styles from previous runs if any
+    Array.from(head.querySelectorAll('style')).forEach(s => {
+      if (s.textContent.includes('.mcq-option.--correct') || s.textContent.includes('.response-analysis-wrapper > .icon')) s.remove();
+    });
     hideStyleEl = document.createElement('style');
     hideStyleEl.textContent = HIDE_CSS;
     head.appendChild(hideStyleEl);
@@ -142,9 +114,31 @@
   function injectPanelStyles() {
     if (panelStyleEl) return;
     const head = document.head || document.documentElement;
+    // Remove old styles from previous runs if any
+    Array.from(head.querySelectorAll('style')).forEach(s => {
+      if (s.textContent.includes('.cbh-panel {') || s.textContent.includes('.cbh-panel::before')) s.remove();
+    });
     panelStyleEl = document.createElement('style');
     panelStyleEl.textContent = PANEL_CSS;
     head.appendChild(panelStyleEl);
+  }
+
+  function applyPanelVisibility() {
+    if (!panelEl) return;
+    panelEl.style.setProperty('display', panelVisible ? 'flex' : 'none', 'important');
+    
+    // Fallback: hide any duplicate panels left over from previous script injections
+    document.querySelectorAll('.cbh-panel').forEach(el => {
+      if (el !== panelEl) {
+        el.style.setProperty('display', panelVisible ? 'flex' : 'none', 'important');
+      }
+    });
+  }
+
+  function setPanelVisible(visible) {
+    panelVisible = !!visible;
+    applyPanelVisibility();
+    return panelVisible;
   }
 
   function postMessageSafe(target, data) {
@@ -168,10 +162,14 @@
     if (panelBuilt || !isTopFrame()) return;
     panelBuilt = true;
 
+    // Remove any previously injected duplicate panels to prevent glitchy behavior
+    document.querySelectorAll('.cbh-panel').forEach(el => el.remove());
+
     injectPanelStyles();
 
     const panel = document.createElement('div');
     panel.className = 'cbh-panel';
+    panelEl = panel;
 
     const title = document.createElement('span');
     title.className = 'cbh-title';
@@ -203,9 +201,12 @@
     let collapsed = false;
     const collapseBtn = document.createElement('button');
     collapseBtn.className = 'cbh-collapse-btn';
+    collapseBtn.type = 'button';
     collapseBtn.textContent = '\u2212';
     collapseBtn.title = 'Minimize';
-    collapseBtn.addEventListener('click', () => {
+    collapseBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       collapsed = !collapsed;
       panel.classList.toggle('cbh-panel--collapsed', collapsed);
       collapseBtn.textContent = collapsed ? '+' : '\u2212';
@@ -214,6 +215,7 @@
     panel.appendChild(collapseBtn);
 
     document.body.appendChild(panel);
+    applyPanelVisibility();
 
     // Sync current state to child frames now and when new iframes appear.
     broadcastStateToChildFrames();
@@ -297,6 +299,11 @@
   window.__cbhSetHiding = (value) => {
     setHiding(!!value);
     return hiding;
+  };
+  window.__cbhGetPanelVisible = () => (isTopFrame() ? panelVisible : null);
+  window.__cbhSetPanelVisible = (value) => {
+    if (!isTopFrame()) return null;
+    return setPanelVisible(!!value);
   };
 
   if (chrome?.runtime?.onMessage) {
