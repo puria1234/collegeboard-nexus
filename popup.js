@@ -453,7 +453,7 @@
             output += `${thinSep}\n`;
 
             if (q.stimulus) {
-                output += `\n[Passage/Stimulus]\n`;
+                output += `\n[Context/Passage]\n`;
                 output += wordWrap(q.stimulus, 70) + '\n\n';
             }
 
@@ -622,7 +622,7 @@
         setAiOutput('');
         if (aiGenerateBtn) {
             aiGenerateBtn.classList.remove('loading');
-            aiGenerateBtn.textContent = 'Generate with AI';
+            aiGenerateBtn.innerHTML = 'Generate with AI';
         }
     }
 
@@ -639,7 +639,7 @@
             const lines = [];
             lines.push(`Q${idx + 1}:`);
             if (q.stimulus) {
-                lines.push(`Stimulus: ${truncatePlain(q.stimulus, 500)}`);
+                lines.push(`Context/Passage: ${truncatePlain(q.stimulus, 500)}`);
             }
             lines.push(truncatePlain(q.text || '', 500));
             if (q.choices && q.choices.length > 0) {
@@ -699,7 +699,12 @@
         aiBusy = true;
         if (aiGenerateBtn) {
             aiGenerateBtn.classList.add('loading');
-            aiGenerateBtn.textContent = 'Generating...';
+            aiGenerateBtn.innerHTML = `
+                <svg class="spinner" viewBox="0 0 50 50">
+                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                </svg>
+                Generating...
+            `;
         }
         setAiStatus('', '');
         setAiOutput('');
@@ -759,7 +764,7 @@
             aiBusy = false;
             if (aiGenerateBtn) {
                 aiGenerateBtn.classList.remove('loading');
-                aiGenerateBtn.textContent = 'Generate with AI';
+                aiGenerateBtn.innerHTML = 'Generate with AI';
             }
         }
     }
