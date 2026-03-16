@@ -1,6 +1,6 @@
 # CollegeBoard Nexus
 
-CollegeBoard Nexus is a browser extension and a suite of tools designed to help you with AP Classroom. It helps you extract and export questions, hide answers while studying, and generate AI study materials.
+CollegeBoard Nexus is a browser extension with a suite of tools designed to help you with AP Classroom. It helps you extract and export questions, hide answers while studying, and generate AI study materials.
 
 ## Install
 
