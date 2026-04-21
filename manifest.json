@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CollegeBoard Nexus",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extract and export questions from AP Classroom, and hide answers while studying",
   "permissions": [
     "activeTab",
