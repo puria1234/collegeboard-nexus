@@ -20,7 +20,7 @@
   background-color: rgba(255,255,255,1) !important;
   border: 0 !important;
 }
-.response-analysis-wrapper > .icon {
+.response-analysis-wrapper {
   display: none !important;
 }
 .--chosen {
@@ -103,7 +103,7 @@
     const head = document.head || document.documentElement;
     // Remove old styles from previous runs if any
     Array.from(head.querySelectorAll('style')).forEach(s => {
-      if (s.textContent.includes('.mcq-option.--correct') || s.textContent.includes('.response-analysis-wrapper > .icon')) s.remove();
+      if (s.textContent.includes('.mcq-option.--correct') || s.textContent.includes('.response-analysis-wrapper')) s.remove();
     });
     hideStyleEl = document.createElement('style');
     hideStyleEl.textContent = HIDE_CSS;

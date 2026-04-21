@@ -26,28 +26,8 @@
     const hiderToggle = document.getElementById('hiderToggle');
     const hiderBadge = document.getElementById('hiderBadge');
     const hiderNote = document.getElementById('hiderNote');
-    const aiPanel = document.getElementById('aiPanel');
-    const aiMode = document.getElementById('aiMode');
-    const aiCount = document.getElementById('aiCount');
-    const aiCountWrap = document.getElementById('aiCountWrap');
-    const aiAnswersWrap = document.getElementById('aiAnswersWrap');
-    const aiIncludeAnswers = document.getElementById('aiIncludeAnswers');
-    const aiGenerateBtn = document.getElementById('aiGenerateBtn');
-    const aiStatus = document.getElementById('aiStatus');
-    const aiOutput = document.getElementById('aiOutput');
-
-    // Settings elements
-    const settingsBtn = document.getElementById('settingsBtn');
-    const backBtn = document.getElementById('backBtn');
-    const mainView = document.getElementById('mainView');
-    const settingsView = document.getElementById('settingsView');
-    const apiKeyInput = document.getElementById('apiKeyInput');
-    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-    const settingsStatus = document.getElementById('settingsStatus');
 
     let extractedData = null;
-    let aiBusy = false;
-    let currentApiKey = '';
 
     // ─── Initialize ──────────────────────────────────────────────
     async function init() {
@@ -101,9 +81,6 @@
 
             extractBtn.style.display = 'flex';
             updateExtractState();
-
-            await initSettings();
-            initAiControls();
 
             extractBtn.addEventListener('click', () => handleExtract(tab));
             downloadBtn.addEventListener('click', handleDownload);
@@ -321,7 +298,7 @@
 
             // Success!
             setStatus('active', `Found ${unique.length} question${unique.length !== 1 ? 's' : ''}`);
-            showResults();
+        showResults();
 
         } catch (error) {
             setStatus('error', 'Extraction failed');
@@ -335,11 +312,6 @@
         extractBtn.style.display = 'none';
         resultsSection.style.display = 'flex';
         resultsCount.textContent = extractedData.questions.length;
-        resetAiOutput();
-        
-        if (aiPanel) {
-            aiPanel.style.display = currentApiKey ? 'block' : 'none';
-        }
 
         previewBox.innerHTML = '';
         // Show all questions in preview
@@ -489,284 +461,6 @@
         output += `${separator}\n`;
 
         return output;
-    }
-
-    // ─── AI Tools ────────────────────────────────────────────────
-
-    function initAiControls() {
-        if (!aiPanel || !aiGenerateBtn) return;
-
-        if (aiMode) {
-            aiMode.addEventListener('change', updateAiModeUi);
-            updateAiModeUi();
-        }
-
-        if (aiIncludeAnswers) {
-            aiIncludeAnswers.addEventListener('change', () => saveAiSettings());
-        }
-
-        if (aiGenerateBtn) {
-            aiGenerateBtn.addEventListener('click', handleAiGenerate);
-        }
-
-        loadAiSettings();
-    }
-
-    function getLocalApiKey() {
-        return currentApiKey;
-    }
-
-    async function initSettings() {
-        // Load saved key first
-        try {
-            const stored = await chrome.storage.local.get(['nvApiKey']);
-            if (stored.nvApiKey) {
-                currentApiKey = stored.nvApiKey;
-                apiKeyInput.value = currentApiKey;
-            } else if (typeof window !== 'undefined' && window.CBN_LOCAL_API_KEY) {
-                // Fallback to local config if present
-                currentApiKey = window.CBN_LOCAL_API_KEY.trim();
-                apiKeyInput.value = currentApiKey;
-            }
-        } catch (e) {
-            console.error('Failed to load settings', e);
-        }
-
-        // Toggle UI
-        settingsBtn.addEventListener('click', () => {
-            mainView.style.display = 'none';
-            settingsView.style.display = 'flex';
-        });
-
-        backBtn.addEventListener('click', () => {
-            settingsView.style.display = 'none';
-            mainView.style.display = 'block';
-        });
-
-        saveSettingsBtn.addEventListener('click', async () => {
-            const val = apiKeyInput.value.trim();
-            currentApiKey = val;
-            try {
-                await chrome.storage.local.set({ nvApiKey: val });
-                settingsStatus.style.display = 'block';
-                setTimeout(() => {
-                    settingsStatus.style.display = 'none';
-                }, 3000);
-                
-                // Keep UI synced immediately 
-                if (aiPanel && resultsSection.style.display === 'flex') {
-                    aiPanel.style.display = currentApiKey ? 'block' : 'none';
-                }
-            } catch (e) {
-                console.error("Failed to save API key", e);
-            }
-        });
-    }
-
-    function updateAiModeUi() {
-        if (!aiMode) return;
-        const mode = aiMode.value;
-        if (aiCountWrap) {
-            aiCountWrap.style.display = (mode === 'similar' || mode === 'flashcards') ? 'flex' : 'none';
-        }
-        if (aiAnswersWrap) {
-            aiAnswersWrap.style.display = mode === 'similar' ? 'flex' : 'none';
-        }
-    }
-
-    async function loadAiSettings() {
-        try {
-            const stored = await chrome.storage.local.get([
-                'cbn_ai_include_answers'
-            ]);
-
-            if (aiIncludeAnswers && typeof stored.cbn_ai_include_answers === 'boolean') {
-                aiIncludeAnswers.checked = stored.cbn_ai_include_answers;
-            }
-        } catch (e) {
-            // ignore storage failures
-        }
-    }
-
-    async function saveAiSettings() {
-        try {
-            await chrome.storage.local.set({
-                cbn_ai_include_answers: aiIncludeAnswers ? aiIncludeAnswers.checked : true
-            });
-        } catch (e) {
-            // ignore storage failures
-        }
-    }
-
-    function setAiStatus(type, message) {
-        if (!aiStatus) return;
-        if (type !== 'error') {
-            aiStatus.style.display = 'none';
-            aiStatus.textContent = '';
-            aiStatus.style.borderLeftColor = 'rgba(255, 255, 255, 0.18)';
-            return;
-        }
-        aiStatus.style.display = message ? 'block' : 'none';
-        aiStatus.textContent = message || '';
-        aiStatus.style.borderLeftColor = 'rgba(239, 68, 68, 0.6)';
-    }
-
-    function setAiOutput(text) {
-        if (!aiOutput) return;
-        aiOutput.style.display = text ? 'block' : 'none';
-        aiOutput.textContent = text || '';
-    }
-
-    function resetAiOutput() {
-        setAiStatus('', '');
-        setAiOutput('');
-        if (aiGenerateBtn) {
-            aiGenerateBtn.classList.remove('loading');
-            aiGenerateBtn.innerHTML = 'Generate with AI';
-        }
-    }
-
-    function truncatePlain(text, maxLen) {
-        if (!text) return '';
-        const cleaned = text.replace(/\s+/g, ' ').trim();
-        if (cleaned.length <= maxLen) return cleaned;
-        return cleaned.substring(0, maxLen).trim() + '…';
-    }
-
-    function buildAiContext(questions, limit) {
-        const subset = questions.slice(0, limit);
-        const parts = subset.map((q, idx) => {
-            const lines = [];
-            lines.push(`Q${idx + 1}:`);
-            if (q.stimulus) {
-                lines.push(`Context/Passage: ${truncatePlain(q.stimulus, 500)}`);
-            }
-            lines.push(truncatePlain(q.text || '', 500));
-            if (q.choices && q.choices.length > 0) {
-                q.choices.forEach((c) => {
-                    lines.push(`${c.letter}) ${truncatePlain(c.text || '', 200)}`);
-                });
-            }
-            return lines.join('\n');
-        });
-        return parts.join('\n\n');
-    }
-
-    function buildAiInstruction(mode, count, includeAnswers) {
-        if (mode === 'summary') {
-            return [
-                'Summarize the key concepts tested by the questions.',
-                'Provide 5–8 concise study tips tied to those concepts.',
-                'Use plain text and keep it under 200 words.'
-            ].join(' ');
-        }
-        if (mode === 'flashcards') {
-            return [
-                `Create ${count} flashcards based on the topics.`,
-                'Format as:',
-                'Front: ...',
-                'Back: ...',
-                'Keep each card short and concrete.'
-            ].join(' ');
-        }
-        return [
-            `Generate ${count} original multiple-choice questions similar in topic and difficulty.`,
-            'Provide 4 answer choices (A–D) for each.',
-            'Do not copy wording from the source.',
-            includeAnswers ? 'Include an Answer Key at the end.' : 'Do not include an answer key.',
-            'Return plain text.'
-        ].join(' ');
-    }
-
-    async function handleAiGenerate() {
-        if (aiBusy) return;
-        if (!extractedData || !extractedData.questions || extractedData.questions.length === 0) {
-            setAiStatus('error', 'Extract questions first to generate AI content.');
-            return;
-        }
-
-        const apiKey = getLocalApiKey();
-        if (!apiKey) {
-            setAiStatus('error', 'AI is not configured. Add your API key in Settings.');
-            return;
-        }
-
-        const model = 'meta/llama-3.1-70b-instruct';
-        const mode = aiMode ? aiMode.value : 'similar';
-        const count = Math.min(Math.max(parseInt(aiCount?.value || '5', 10) || 5, 1), 10);
-        const includeAnswers = aiIncludeAnswers ? aiIncludeAnswers.checked : true;
-
-        aiBusy = true;
-        if (aiGenerateBtn) {
-            aiGenerateBtn.classList.add('loading');
-            aiGenerateBtn.innerHTML = `
-                <svg class="spinner" viewBox="0 0 50 50">
-                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-                </svg>
-                Generating...
-            `;
-        }
-        setAiStatus('', '');
-        setAiOutput('');
-
-        const context = buildAiContext(extractedData.questions, 5);
-        const instruction = buildAiInstruction(mode, count, includeAnswers);
-        const userPrompt = [
-            'You are a study assistant. Use the sample questions below as inspiration.',
-            'Do not copy text. Create new, original content.',
-            '',
-            'Sample Questions:',
-            context,
-            '',
-            'Task:',
-            instruction
-        ].join('\n');
-
-        const payload = {
-            model,
-            messages: [
-                { role: 'system', content: 'You generate original study materials based on provided examples.' },
-                { role: 'user', content: userPrompt }
-            ],
-            max_tokens: 1200,
-            temperature: 0.6,
-            top_p: 0.95,
-            stream: false
-        };
-
-        try {
-            const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                const errText = await response.text();
-                throw new Error(`API error (${response.status}): ${errText}`);
-            }
-
-            const data = await response.json();
-            const content = data?.choices?.[0]?.message?.content?.trim();
-            if (!content) {
-                throw new Error('No content returned from the model.');
-            }
-
-            setAiOutput(content);
-            setAiStatus('', '');
-        } catch (error) {
-            setAiStatus('error', 'AI generation failed: ' + error.message);
-        } finally {
-            aiBusy = false;
-            if (aiGenerateBtn) {
-                aiGenerateBtn.classList.remove('loading');
-                aiGenerateBtn.innerHTML = 'Generate with AI';
-            }
-        }
     }
 
     // ─── Utility Functions ──────────────────────────────────────

@@ -26,12 +26,6 @@
               <h1 class="brand-title">CollegeBoard Nexus</h1>
             </div>
           </div>
-          <button id="settingsBtn" title="Settings" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; transition: color 0.2s;">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-          </button>
         </div>
       <div class="course-select">
         <div class="course-row">
@@ -92,38 +86,7 @@
           </button>
         </div>
       </div>
-      <div class="ai-panel" id="aiPanel">
-        <div class="ai-header">
-          <div class="ai-title-wrap">
-            <span class="ai-title">AI Study Tools</span>
-            <span class="ai-subtitle">Generate practice and summaries</span>
-          </div>
-        </div>
-        <div class="ai-grid">
-          <label class="ai-label" for="aiMode">Mode</label>
-          <div class="ai-row">
-            <select class="ai-select" id="aiMode">
-              <option value="similar">Similar Questions</option>
-              <option value="summary">Key Concepts & Tips</option>
-              <option value="flashcards">Flashcards</option>
-            </select>
-            <div class="ai-row-group" id="aiCountWrap">
-              <label class="ai-inline-label" for="aiCount">Count</label>
-              <input class="ai-input ai-input--count" id="aiCount" type="number" min="1" max="10" value="5" />
-            </div>
-          </div>
-
-          <label class="ai-check" id="aiAnswersWrap">
-            <input type="checkbox" id="aiIncludeAnswers" checked />
-            <span>Include answer key</span>
-          </label>
-        </div>
-
-        <button class="btn btn-primary" id="aiGenerateBtn">Generate with AI</button>
-        <div class="ai-status" id="aiStatus" style="display: none;"></div>
-        <div class="ai-output" id="aiOutput" style="display: none;"></div>
-      </div>
-      <div class="preview" id="previewBox"></div>
+<div class="preview" id="previewBox"></div>
     </div>
 
     <!-- Error Card -->
@@ -156,30 +119,8 @@
 
     </div> <!-- End mainView -->
 
-    <!-- Settings View -->
-    <div id="settingsView" style="display: none; padding: 24px; flex-direction: column; gap: 16px; flex: 1;">
-      <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px;">
-        <button id="backBtn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; padding: 4px; transition: color 0.2s;" title="Back">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-        </button>
-        <span style="font-size: 15px; font-weight: 600; color: var(--text-title);">Settings</span>
-      </div>
-      
-      <div class="card" style="margin: 0;">
-        <label class="course-label" style="display: block; margin-bottom: 8px;">NVIDIA API Key</label>
-        <input type="password" id="apiKeyInput" style="width: 100%; background: var(--bg-input); border: 1px solid var(--border-strong); color: var(--text-title); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; outline: none; margin-bottom: 8px;" placeholder="nvapi-..." />
-        <span class="tool-note" style="display: block; margin-bottom: 16px;">
-          Get your free API key from <a href="https://build.nvidia.com/explore/discover" target="_blank" style="color: #60a5fa; text-decoration: none;">build.nvidia.com</a> to enable AI features.
-        </span>
-        <button class="btn btn-primary" id="saveSettingsBtn">Save Key</button>
-        <div id="settingsStatus" style="margin-top: 12px; font-size: 12px; color: #34d399; display: none;">Saved successfully!</div>
-      </div>
-    </div>
 
-    <!-- Footer -->
+<!-- Footer -->
     <footer class="footer">
       <div class="footer-content">
         <span class="footer-text">Powered by CollegeBoard Nexus</span>
