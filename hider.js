@@ -27,6 +27,17 @@
   color: inherit !important;
   background-color: inherit !important;
 }
+[class*="rationale"],
+[class*="answer-explanation"],
+[class*="answerExplan"],
+[class*="answer-key"],
+[class*="answer_key"],
+[class*="answer-rationale"],
+[class*="correct-answer-text"],
+[class*="score-detail"],
+.lrn_validation_container {
+  display: none !important;
+}
 `;
 
   // ── CSS for the floating panel UI ────────────────────────────────────────
