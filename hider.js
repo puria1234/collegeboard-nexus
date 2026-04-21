@@ -20,22 +20,12 @@
   background-color: rgba(255,255,255,1) !important;
   border: 0 !important;
 }
-.response-analysis-wrapper {
-  display: none !important;
-}
 .--chosen {
   color: inherit !important;
   background-color: inherit !important;
 }
-[class*="rationale"],
-[class*="answer-explanation"],
-[class*="answerExplan"],
-[class*="answer-key"],
-[class*="answer_key"],
-[class*="answer-rationale"],
-[class*="correct-answer-text"],
-[class*="score-detail"],
-.lrn_validation_container {
+.response-analysis-wrapper,
+.LearnosityDistractor {
   display: none !important;
 }
 `;
